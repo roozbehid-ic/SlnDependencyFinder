@@ -19,5 +19,11 @@
     <PackageReference Include="Microsoft.Build" Version="17.11.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="RoozSoft.SlnDependencyFinder.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   
 </Project>

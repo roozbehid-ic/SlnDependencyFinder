@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RoozSoft.SlnDependencyFinder.nodep</id>
+    <title>Sln Dependency Finder with no extra dependency</title>
+    <description>some description</description>
+    <version>1.0.0</version>
+    <authors>RoozSoft</authors> 
+    <owners>RoozSoft</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>https://github.com/roozbehid-ic/SlnDependencyFinder</projectUrl>
+    <copyright>Copyright 2024 - RoozSoft</copyright>
+    <iconUrl>https://raw.githubusercontent.com/inContact/MicroLibrary_SQLQuery/master/Mojo.png</iconUrl>
+    <tags></tags>
+    <repository url="https://github.com/roozbehid-ic/SlnDependencyFinder" type="nuget" />
+  </metadata>
+  <files>
+    <!-- Here you need all .dll,.pdb,.targets and all .h files to be available for C++ programs using this-->
+    <file src="*.dll" target="lib\net8.0" />
+    <file src="runtimes\**\*" target="runtimes" />
+  </files>
+</package>

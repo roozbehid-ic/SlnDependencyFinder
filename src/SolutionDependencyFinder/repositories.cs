@@ -11,12 +11,12 @@ public interface IMonoRepository
 }
 
 
-public class GitRepository : IMonoRepository
+public class ExternalGitRepository : IMonoRepository
 {
     private readonly string _repositoryPath;
     HashSet<string> _files;
     Task ready;
-    public GitRepository(string repositoryPath)
+    public ExternalGitRepository(string repositoryPath)
     {
         if (string.IsNullOrWhiteSpace(repositoryPath) || !Directory.Exists(repositoryPath))
         {
@@ -42,8 +42,8 @@ public class GitRepository : IMonoRepository
     public async Task<HashSet<string>> GetAllFilesAsync()
     {
         var files = new HashSet<string>(300_000, StringComparer.OrdinalIgnoreCase);
-        string gitCommand = "ls-tree -r HEAD --name-only";
-        var result = await RunGitCommandAsync(gitCommand);
+        
+        var result = await RunGitCommandAsyncList(new List<string>() { "ls-tree","-r","HEAD","--name-only" });
 
         using (var reader = new StringReader(result))
         {
@@ -75,42 +75,56 @@ public class GitRepository : IMonoRepository
             throw new ArgumentException("File path cannot be null or empty", nameof(filePath));
         }
 
-        string gitCommand = $"show HEAD:{filePath}";
-        var result = await RunGitCommandAsync(gitCommand);
+        var result = await RunGitCommandAsyncList(new List<string>() { "--no-pager","show", $"HEAD:{filePath}" });
         return result;
     }
 
     SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
     // Helper method to execute Git commands
-    private async Task<string> RunGitCommandAsync(string arguments)
+    private async Task<string> RunGitCommandAsyncList(IList<string> arguments)
     {
-        await SemaphoreSlim.WaitAsync();
+        //await SemaphoreSlim.WaitAsync();
         try
         {
-            var processStartInfo = new ProcessStartInfo
+            var processStartInfo = new ProcessStartInfo("git", arguments)
             {
-                FileName = "git",
-                Arguments = arguments,
                 RedirectStandardOutput = true,
-                RedirectStandardError = true,
+                //RedirectStandardError = true,
+                RedirectStandardInput = true,
                 UseShellExecute = false,
-                CreateNoWindow = true,
-                WorkingDirectory = _repositoryPath
-            };
+                CreateNoWindow = false,
+                WorkingDirectory = Path.GetFullPath(_repositoryPath)
 
+            };
+            processStartInfo.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            CancellationTokenSource cts_thread = new CancellationTokenSource();
             using (var process = new Process { StartInfo = processStartInfo })
             {
                 var output = new StringBuilder();
                 var error = new StringBuilder();
 
-                process.OutputDataReceived += (sender, args) => output.AppendLine(args.Data);
-                process.ErrorDataReceived += (sender, args) => error.AppendLine(args.Data);
-
                 process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
 
-                await process.WaitForExitAsync();
+                new Thread(() =>
+                {
+                    while (!cts.IsCancellationRequested) 
+                    {
+                    if (!process.StandardOutput.EndOfStream)
+                        output.AppendLine(process.StandardOutput.ReadLine());
+                    //if (!process.StandardError.EndOfStream)
+                    //    error.AppendLine(process.StandardError.ReadLine());
+                    }
+                    cts_thread.Cancel();
+                }).Start();
+
+
+
+                process.WaitForExit();
+                cts.Cancel();
+                while (!cts_thread.IsCancellationRequested)
+                    await Task.Delay(100);
 
                 if (process.ExitCode != 0)
                 {
@@ -119,15 +133,21 @@ public class GitRepository : IMonoRepository
 
                 return output.ToString();
             }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            return "";
         }
         finally
         {
-            SemaphoreSlim?.Release();
+            //SemaphoreSlim?.Release();
         }
     }
 }
 
-public class MonoRepo : IMonoRepository
+public class InternalGitRepository : IMonoRepository
 {
     Repository repo;
     Dictionary<string, string> allfiles = new(300_000, StringComparer.OrdinalIgnoreCase);
@@ -138,9 +158,8 @@ public class MonoRepo : IMonoRepository
     /// <param name="repoPath"></param>
     /// <param name="_solutionFilePath"></param>
     /// <param name="id_path_filename">can be generated as: git ls-tree --format "%(objectname),%(path)" -r HEAD</param>
-    public MonoRepo(string repoPath, string id_path_filename)
+    public InternalGitRepository(string repoPath, string id_path_filename)
     {
-        Console.WriteLine("Started");
         if (!String.IsNullOrEmpty(id_path_filename) && File.Exists(id_path_filename))
         {
 

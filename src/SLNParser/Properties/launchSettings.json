@@ -2,7 +2,7 @@
   "profiles": {
     "SLNParser": {
       "commandName": "Project",
-      "commandLineArgs": "d:\\inContact-TFS-Git-New\\oooo\\incontact Code\\WebDevelopment\\inControl.NET\\inControl.NET.sln d:\\inContact-TFS-Git-New\\oooo\\incontact\\o.txt"
+      "commandLineArgs": "external d:\\inContact-TFS-Git-New\\src\\ Code\\C#\\Services\\VCSvc\\VCSvc.sln"
     }
   }
 }

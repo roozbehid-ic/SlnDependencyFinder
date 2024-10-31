@@ -76,6 +76,8 @@ public class SolutionDependencyFinder
     async Task<HashSet<string>> GetDependencyListAsync(string solutionFilePath)
     {
         var solutionFolder = Path.GetDirectoryName(solutionFilePath);
+        if (String.IsNullOrEmpty(solutionFolder))
+            solutionFolder = ".";
         ParseSolutionFile(solutionFilePath).ForEach(x => AddNewProject(x));
 
         AddDependencyFolder(solutionFolder);
@@ -176,7 +178,7 @@ public class SolutionDependencyFinder
                             }
                             if (referencePath.Contains("C:\\Program Files"))
                             {
-                                Console.WriteLine($"WARNING --- Project:{project.Location} has reference {referencePath} which is invalid for build pipeline");
+                                Console.WriteLine($"WARNING --- Project:{projectFilePath} has reference {referencePath} which is invalid for build pipeline");
                                 continue;
                             }
 
