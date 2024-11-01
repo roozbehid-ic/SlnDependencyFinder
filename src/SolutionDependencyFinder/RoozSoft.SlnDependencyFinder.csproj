@@ -15,6 +15,7 @@
     <NuspecFile>$(OutDir)RoozSoft.SlnDependencyFinder.nuspec</NuspecFile>
     <NuspecBasePath>$(SolutionDir)\Output\bin\$(Platform)\$(Configuration)</NuspecBasePath>
     <NuspecProperties>Version=$(Version);Title=$(Title)</NuspecProperties>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
