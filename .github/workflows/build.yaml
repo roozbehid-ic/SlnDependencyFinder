@@ -24,7 +24,10 @@ jobs:
       - name: Build project
         run: |
             dotnet build --configuration Release
-            dotnet pack -p:UseNuspec=true --configuration Release
+
+      - name: Pack no-dep
+        run: |
+            dotnet pack -p:UseNuspec=true --configuration Release --no-restore
 
       - name: Publish to NuGet.org
         run: |
