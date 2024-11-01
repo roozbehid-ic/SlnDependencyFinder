@@ -22,7 +22,9 @@ jobs:
           dotnet-version: '8.0.x'
  
       - name: Build project
-        run: dotnet build --configuration Release
+        run: |
+            dotnet build --configuration Release
+            dotnet pack -p:UseNuspec=true
 
       - name: Publish to NuGet.org
         run: |

@@ -4,10 +4,17 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="$(UseNuspec) != 'true'">True</GeneratePackageOnBuild>
     <Title>Sln Dependency Finder</Title>
     <RepositoryUrl>https://github.com/roozbehid-ic/SlnDependencyFinder</RepositoryUrl>
     <PackageOutputPath>$(SolutionDir)Output</PackageOutputPath>
+
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(UseNuspec) == 'true'">
+    <NuspecFile>$(OutDir)RoozSoft.SlnDependencyFinder.nuspec</NuspecFile>
+    <NuspecBasePath>$(SolutionDir)\Output\bin\$(Platform)\$(Configuration)</NuspecBasePath>
+    <NuspecProperties>Version=$(Version);Title=$(Title)</NuspecProperties>
   </PropertyGroup>
 
   <ItemGroup>
