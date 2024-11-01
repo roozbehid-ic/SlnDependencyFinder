@@ -1,1 +1,8 @@
-mode: ContinuousDeployment
+strategies:
+- Mainline 
+branches:
+  main:
+    mode: ContinuousDeployment
+    
+    is-main-branch: true
+    increment: patch
