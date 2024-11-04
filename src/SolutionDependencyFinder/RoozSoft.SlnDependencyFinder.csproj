@@ -13,7 +13,6 @@
   <PropertyGroup Condition="$(UseNuspec) == 'true'">
     <NuspecFile>$(OutDir)RoozSoft.SlnDependencyFinder-nodep.nuspec</NuspecFile>
     <NuspecBasePath>$(SolutionDir)\Output\bin\$(Platform)\$(Configuration)</NuspecBasePath>
-    <NuspecProperties>Version=$(Version);Title=$(Title)</NuspecProperties>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
@@ -32,5 +31,11 @@
     </None>
   </ItemGroup>
 
-  
+
+<Target Name="SetNuspecProps" BeforeTargets="GenerateNuspec" Condition="$(UseNuspec) == 'true'">
+    <PropertyGroup>
+        <NuspecProperties>Version=$(PackageVersion);Title=$(Title)</NuspecProperties>
+    </PropertyGroup>
+</Target>
+
 </Project>
