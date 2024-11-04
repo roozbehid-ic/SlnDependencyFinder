@@ -3,6 +3,6 @@ strategies:
 branches:
   main:
     mode: ContinuousDeployment
-    
     is-main-branch: true
     increment: patch
+    track-merge-message: false
