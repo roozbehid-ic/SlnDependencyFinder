@@ -35,7 +35,7 @@ jobs:
             
       - name: Publish to NuGet.org
         run: |
-          for file in ./Output/*.nupkg; do
+          for file in ./pushnugets/*.nupkg; do
             dotnet nuget push "$file" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
           done
         env:
