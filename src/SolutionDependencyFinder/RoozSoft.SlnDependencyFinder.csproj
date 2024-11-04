@@ -8,11 +8,10 @@
     <Title>Sln Dependency Finder</Title>
     <RepositoryUrl>https://github.com/roozbehid-ic/SlnDependencyFinder</RepositoryUrl>
     <PackageOutputPath>$(SolutionDir)Output</PackageOutputPath>
-
   </PropertyGroup>
 
   <PropertyGroup Condition="$(UseNuspec) == 'true'">
-    <NuspecFile>$(OutDir)RoozSoft.SlnDependencyFinder.nuspec</NuspecFile>
+    <NuspecFile>$(OutDir)RoozSoft.SlnDependencyFinder-nodep.nuspec</NuspecFile>
     <NuspecBasePath>$(SolutionDir)\Output\bin\$(Platform)\$(Configuration)</NuspecBasePath>
     <NuspecProperties>Version=$(Version);Title=$(Title)</NuspecProperties>
     <IsPackable>true</IsPackable>
@@ -28,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="RoozSoft.SlnDependencyFinder.nuspec">
+    <None Update="RoozSoft.SlnDependencyFinder-nodep.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
