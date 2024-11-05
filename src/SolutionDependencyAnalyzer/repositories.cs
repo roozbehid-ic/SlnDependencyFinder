@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace RoozSoft.SlnDependencyFinder;
+namespace RoozSoft.SolutionDependencyAnalyzer;
 
 public interface IMonoRepository
 {
@@ -10,6 +10,21 @@ public interface IMonoRepository
     string GetFileContent(string filename);
 }
 
+public class FileSystemRepository : IMonoRepository
+{
+    string repoPath;
+    public FileSystemRepository(string repoPath) => this.repoPath = repoPath;
+
+    public bool FileExists(string filename)
+    {
+        return File.Exists(Path.Combine(repoPath, filename));
+    }
+
+    public string GetFileContent(string filename)
+    {
+        return File.ReadAllText(Path.Combine(this.repoPath, filename));
+    }
+}
 
 public class ExternalGitRepository : IMonoRepository
 {
@@ -86,7 +101,7 @@ public class ExternalGitRepository : IMonoRepository
         //await SemaphoreSlim.WaitAsync();
         try
         {
-            var processStartInfo = new ProcessStartInfo("git", arguments)
+            var processStartInfo = new ProcessStartInfo("git")
             {
                 RedirectStandardOutput = true,
                 //RedirectStandardError = true,
@@ -96,6 +111,9 @@ public class ExternalGitRepository : IMonoRepository
                 WorkingDirectory = Path.GetFullPath(_repositoryPath)
 
             };
+            foreach (var arg in arguments)
+                processStartInfo.ArgumentList.Add(arg);
+
             processStartInfo.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
 
             CancellationTokenSource cts = new CancellationTokenSource();

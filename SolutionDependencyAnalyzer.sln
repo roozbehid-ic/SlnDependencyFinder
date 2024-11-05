@@ -3,15 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlnDepFinderConsole", "src\SLNParser\SlnDepFinderConsole.csproj", "{7DEB9134-641B-4B52-AD43-CAA572397B19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolutionDependencyAnalyzerApp", "src\SolutionDependencyAnalyzerApp\SolutionDependencyAnalyzerApp.csproj", "{7DEB9134-641B-4B52-AD43-CAA572397B19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoozSoft.SlnDependencyFinder", "src\SolutionDependencyFinder\RoozSoft.SlnDependencyFinder.csproj", "{CAA6A09A-219A-4643-A74F-3289A1443BDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoozSoft.SolutionDependencyAnalyzer", "src\SolutionDependencyAnalyzer\RoozSoft.SolutionDependencyAnalyzer.csproj", "{CAA6A09A-219A-4643-A74F-3289A1443BDA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{2428F44D-73F8-4327-87AE-4FC4177569CB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{BA8EB055-BD7F-48CE-851F-F369D4027F12}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yaml = .github\workflows\build.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A8B67BB6-4F4E-4F58-9F8B-F2781ABCBA6C}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Global

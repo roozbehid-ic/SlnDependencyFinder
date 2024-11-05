@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild Condition="$(UseNuspec) != 'true'">True</GeneratePackageOnBuild>
+    <Title>Solution Dependency Analyzer</Title>
+    <Description>**SolutionDependencyAnalyzer** is a .NET library that analyzes Visual Studio solution (.sln) files to identify project dependencies and required folders. It enables efficient dependency tracking in large or monorepo environments by supporting Git-based file access modes, including `libgit`, external Git executables, and regular file system access. Ideal for sparse checkouts, dependency validation, and build optimization.</Description>
+    <RepositoryUrl>https://github.com/roozbehid-ic/SolutionDependencyAnalyzer</RepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+    <PackageTags>SolutionDependencyAnalyzer;VisualStudio;SolutionParser;DependencyAnalysis;Monorepo;SparseCheckout;BuildOptimization;GitIntegration;libgit;ProjectDependencies</PackageTags>
+    <PackageReadmeFile>README.MD</PackageReadmeFile>
+    <PackageOutputPath>$(SolutionDir)Output</PackageOutputPath>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <MicrosoftBuildPackageVersion Condition="'$(TargetFramework)' == 'net8.0'">17.11.4</MicrosoftBuildPackageVersion>
+    <MicrosoftBuildPackageVersion Condition="'$(TargetFramework)' == 'net6.0'">17.3.2</MicrosoftBuildPackageVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(UseNuspec) == 'true'">
+    <NuspecFile>$(SolutionDir)\Output\bin\RoozSoft.SolutionDependencyAnalyzer-nodep.nuspec</NuspecFile>
+    <NuspecBasePath>$(SolutionDir)\Output\bin\$(Platform)\$(Configuration)</NuspecBasePath>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference> 
+    <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildPackageVersion)" />
+    <PackageReference Include="LibGit2Sharp" Version="0.30.0" />
+    
+</ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="RoozSoft.SolutionDependencyAnalyzer-nodep.nuspec">
+    </None>
+    <None Include="..\..\readme.md" Pack="true" PackagePath="\">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="CopyFilesTargetName" AfterTargets="Build">
+    <Copy SourceFiles="RoozSoft.SolutionDependencyAnalyzer-nodep.nuspec" DestinationFolder="$(SolutionDir)\Output\bin\" />
+  </Target>
+
+<Target Name="SetNuspecProps" BeforeTargets="GenerateNuspec" Condition="$(UseNuspec) == 'true'">
+    <PropertyGroup>
+        <NuspecProperties>version=$(PackageVersion);readme=$(PackageReadmeFile);description=$(Description);projectUrl=$(PackageProjectUrl);repository_url=$(RepositoryUrl)</NuspecProperties>
+    </PropertyGroup>
+</Target>
+
+</Project>

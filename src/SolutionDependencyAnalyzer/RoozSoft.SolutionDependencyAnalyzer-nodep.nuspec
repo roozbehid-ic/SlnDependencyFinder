@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RoozSoft.SolutionDependencyAnalyzer-nodep</id>
+    <title>Solution Dependency Analyzer with no extra dependency</title>
+    <description>$description$</description>
+    <version>$version$</version>
+    <authors>RoozSoft</authors> 
+    <owners>RoozSoft</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <readme>$readme$</readme>
+    <projectUrl>$projectUrl$</projectUrl>
+    <copyright>Copyright 2024 - RoozSoft</copyright>
+    <tags>SolutionDependencyAnalyzer;VisualStudio;SolutionParser;DependencyAnalysis;Monorepo;SparseCheckout;BuildOptimization;GitIntegration;libgit;ProjectDependencies;no_dependency_library</tags>
+    <repository url="$repository_url$" type="nuget" />
+    <license type="expression">MIT</license>
+  </metadata>
+  <files>
+    <!-- Here you need all .dll,.pdb,.targets and all .h files to be available for C++ programs using this-->
+    <file src="net8.0\*.dll" target="lib\net8.0" />
+    <file src="net6.0\*.dll" target="lib\net6.0" />
+    <file src="net8.0\readme.md"  />
+    <file src="net8.0\runtimes\**\*" target="runtimes" />
+  </files>
+</package>

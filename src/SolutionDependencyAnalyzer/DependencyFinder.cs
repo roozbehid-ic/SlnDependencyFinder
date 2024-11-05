@@ -3,7 +3,7 @@ using Microsoft.Build.Construction;
 
 using System.Collections.Concurrent;
 
-namespace RoozSoft.SlnDependencyFinder;
+namespace RoozSoft.SolutionDependencyAnalyzer;
 
 class ProjectItem
 {
@@ -11,12 +11,12 @@ class ProjectItem
     public Task<ProjectRootElement?> project;
 }
 
-public class SolutionDependencyFinder
+public class SolutionDependencyAnalyzer
 {
     HashSet<string> allDependencyFolders = new HashSet<string>(50);
     ConcurrentDictionary<string, ProjectItem> projectDependency = new();
     IMonoRepository repo;
-    public SolutionDependencyFinder(IMonoRepository _repo)
+    public SolutionDependencyAnalyzer(IMonoRepository _repo)
     {
         repo = _repo;
     }
