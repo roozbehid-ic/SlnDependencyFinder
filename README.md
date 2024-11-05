@@ -1,6 +1,6 @@
 # SolutionDependencyAnalyzer
 
-SolutionDependencyAnalyzer is a .NET 8.0 library designed for monorepo environments or any large repository setup where analyzing solution dependencies efficiently is essential. This tool can parse Visual Studio solution (.sln) files, identify all dependencies across projects within the solution, and output a complete list of required folders. This list can be used to enable selective checkouts, optimize sparse checkouts, or manage build dependencies.
+SolutionDependencyAnalyzer is a .NET 8.0/.NET 6.0 library designed for monorepo environments or any large repository setup where analyzing solution dependencies efficiently is essential. This tool can parse Visual Studio solution (.sln) files, identify all dependencies across projects within the solution, and output a complete list of required folders. This list can be used to enable selective checkouts, optimize sparse checkouts, or manage build dependencies.
 
 # Features
 - Visual Studio Solution Parsing: Automatically processes a .sln file, traversing all associated projects to map out dependencies.
@@ -26,7 +26,7 @@ using RoozSoft.SolutionDependencyAnalyzer;
 
 // Initialize analyzer for your .sln file
 var analyzer = new SolutionAnalyzer("path/to/your/solution.sln");
-var repo =  new ExternalGitRepository("path\to\repository"),
+var repo =  new ExternalGitRepository("path\\to\\repository"),
 var repo =  new InternalGitRepository("path/to/repository", "path/to/id_path_filename"),
 var repo =  new FileSystemRepository("path/to/repository"),
 
