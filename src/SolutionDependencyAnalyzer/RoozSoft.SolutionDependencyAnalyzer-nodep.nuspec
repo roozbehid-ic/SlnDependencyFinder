@@ -19,7 +19,7 @@
     <!-- Here you need all .dll,.pdb,.targets and all .h files to be available for C++ programs using this-->
     <file src="net8.0\*.dll" target="lib\net8.0" />
     <file src="net6.0\*.dll" target="lib\net6.0" />
-    <file src="net8.0\readme.md"  />
+    <file src="net8.0\README.md"  />
     <file src="net8.0\runtimes\**\*" target="runtimes" />
   </files>
 </package>

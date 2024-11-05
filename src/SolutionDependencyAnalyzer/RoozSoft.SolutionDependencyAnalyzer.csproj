@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/roozbehid-ic/SolutionDependencyAnalyzer</RepositoryUrl>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageTags>SolutionDependencyAnalyzer;VisualStudio;SolutionParser;DependencyAnalysis;Monorepo;SparseCheckout;BuildOptimization;GitIntegration;libgit;ProjectDependencies</PackageTags>
-    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageOutputPath>$(SolutionDir)Output</PackageOutputPath>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <MicrosoftBuildPackageVersion Condition="'$(TargetFramework)' == 'net8.0'">17.11.4</MicrosoftBuildPackageVersion>
