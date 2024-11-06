@@ -16,6 +16,7 @@ public class SolutionDependencyAnalyzer
     HashSet<string> allDependencyFolders = new HashSet<string>(50);
     ConcurrentDictionary<string, ProjectItem> projectDependency = new();
     IMonoRepository repo;
+    static string fullPathPrefix = OperatingSystem.IsWindows() ? "C:\\" : "/";
     public SolutionDependencyAnalyzer(IMonoRepository _repo)
     {
         repo = _repo;
@@ -23,6 +24,7 @@ public class SolutionDependencyAnalyzer
 
     public void AddDependencyFolder(string FolderPath)
     {
+        FolderPath = NormalizePath(FolderPath);
         var modified = true;
         while (modified)
         {
@@ -46,17 +48,28 @@ public class SolutionDependencyAnalyzer
         allDependencyFolders.Add(FolderPath);
     }
 
-
+    public string NormalizePath(string path)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return path.Replace("/", "\\");
+        }
+        else
+        {
+            return path.Replace("\\", "/");
+        }
+    }
 
     void AddNewProject(string projectFilePath)
     {
+        projectFilePath = NormalizePath(projectFilePath);
         projectDependency.TryAdd(projectFilePath, new ProjectItem()
         {
             project = Task.Run(() => {
                 try
                 {
                     var newProjectFileName = Path.GetTempFileName();
-                    var projectDirectoryPath = Path.GetFullPath(Path.GetDirectoryName(projectFilePath), "C:\\").Substring(3);
+                    var projectDirectoryPath = Path.GetFullPath(Path.GetDirectoryName(projectFilePath), fullPathPrefix).Substring(fullPathPrefix.Length);
                     File.WriteAllText(newProjectFileName, repo.GetFileContent(projectFilePath));
                     return ProjectRootElement.Open(newProjectFileName);
                 }
@@ -115,8 +128,8 @@ public class SolutionDependencyAnalyzer
             {
                 var parts = line.Split(',');
                 var projectPath = parts[1].Trim().Trim('"');
-                var fullPath = Path.Combine(solutionFolder, projectPath);
-                fullPath = Path.GetFullPath(fullPath, "C:\\").Substring(3);
+                var fullPath = NormalizePath(Path.Combine(solutionFolder, projectPath));
+                fullPath = Path.GetFullPath(fullPath, fullPathPrefix).Substring(fullPathPrefix.Length);
 
                 if (repo.FileExists(fullPath))
                 {
@@ -135,6 +148,7 @@ public class SolutionDependencyAnalyzer
     {
 
         var changed = false;
+        projectFilePath = NormalizePath(projectFilePath);
         projectDependency[projectFilePath].traversed = true;
         var projectDirectoryPath = Path.GetDirectoryName(projectFilePath);
         AddDependencyFolder(projectDirectoryPath);
@@ -150,13 +164,13 @@ public class SolutionDependencyAnalyzer
             {
                 if (item.ItemType == "Compile" || item.ItemType == "Content" || item.ItemType == "Analyzer" || item.ItemType == "None")
                 {
-                    var filePath = Path.Combine(projectDirectoryPath, item.Include);
-                    filePath = Path.GetFullPath(filePath, "C:\\").Substring(3);
+                    var filePath = NormalizePath(Path.Combine(projectDirectoryPath, item.Include));
+                    filePath = Path.GetFullPath(filePath, fullPathPrefix).Substring(fullPathPrefix.Length);
 
                     if (!string.IsNullOrEmpty(filePath) && repo.FileExists(filePath))
                     {
                         var folderPath = Path.GetDirectoryName(filePath);
-                        if (folderPath.StartsWith(projectDirectoryPath))
+                        if (folderPath.StartsWith(projectDirectoryPath) || String.IsNullOrEmpty(folderPath))
                             continue;
                         AddDependencyFolder(Path.GetFullPath(folderPath));
                     }
@@ -165,7 +179,7 @@ public class SolutionDependencyAnalyzer
                 {
                     if (item.FirstChild != null && item.AllChildren.Any(x => x.ElementName == "HintPath"))
                     {
-                        var referencePath = ((ProjectMetadataElement)item.AllChildren.FirstOrDefault(x => x.ElementName == "HintPath")).Value;
+                        var referencePath = NormalizePath(((ProjectMetadataElement)item.AllChildren.FirstOrDefault(x => x.ElementName == "HintPath")).Value);
                         if (!string.IsNullOrEmpty(referencePath) && referencePath.Contains(".dll") && !referencePath.Contains(".nuget\\"))
                         {
                             if (referencePath.Contains("$(SolutionDir)"))
@@ -182,16 +196,16 @@ public class SolutionDependencyAnalyzer
                                 continue;
                             }
 
-                            var filePath = Path.Combine(projectDirectoryPath, referencePath);
-                            filePath = Path.GetFullPath(filePath, "C:\\").Substring(3);
+                            var filePath = NormalizePath(Path.Combine(projectDirectoryPath, referencePath));
+                            filePath = Path.GetFullPath(filePath, fullPathPrefix).Substring(fullPathPrefix.Length);
                             if (repo.FileExists(filePath))
                             {
                                 AddDependencyFolder(Path.GetDirectoryName(filePath));
                             }
                             else
                             {
-                                filePath = Path.Combine(solutionFolder, referencePath);
-                                filePath = Path.GetFullPath(filePath, "C:\\").Substring(3);
+                                filePath = NormalizePath(Path.Combine(solutionFolder, referencePath));
+                                filePath = Path.GetFullPath(filePath, fullPathPrefix).Substring(fullPathPrefix.Length);
                                 if (repo.FileExists(filePath))
                                     AddDependencyFolder(Path.GetDirectoryName(filePath));
                             }
@@ -200,8 +214,8 @@ public class SolutionDependencyAnalyzer
                 }
                 else if (item.ItemType == "ProjectReference")
                 {
-                    var filePath = Path.Combine(projectDirectoryPath, item.Include);
-                    filePath = Path.GetFullPath(filePath, "C:\\").Substring(3);
+                    var filePath = NormalizePath(Path.Combine(projectDirectoryPath, item.Include));
+                    filePath = Path.GetFullPath(filePath, fullPathPrefix).Substring(fullPathPrefix.Length);
 
                     if (!string.IsNullOrEmpty(filePath) && repo.FileExists(filePath))
                     {

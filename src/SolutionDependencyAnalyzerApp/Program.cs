@@ -7,13 +7,17 @@ class Program
     static async Task Main(string[] args)
     {
         Stopwatch stp = Stopwatch.StartNew();
+       
+
         if (args.Length < 3)
         {
+            Console.WriteLine();
             Console.WriteLine($"Usage: {Path.GetFileName(Assembly.GetEntryAssembly().Location)} <internal|external|system> <path-to-repo-> <path-to-sln-file> <optional:id_path_filename>");
             Console.WriteLine("internal uses libgit to discover files. Fastest if you provide an id_path_filename to it.");
             Console.WriteLine("external uses git binary process to discover files.Not so fast for solutions with many projects and dependencies as we use git external process to get content of each file.");
             Console.WriteLine("system uses regular file systems to disocver files. Make sense to use if your repository is fully checked out.");
             Console.WriteLine("You can generate id_path_filename by doing : git ls-tree --format \"%(objectname),%(path)\" -r HEAD");
+            Console.WriteLine();
             return;
         }
 
