@@ -1,8 +1,13 @@
 {
   "profiles": {
-    "SLNParser": {
+    "SolutionDependencyAnalyzer": {
       "commandName": "Project",
-      "commandLineArgs": "external d:\\inContact-TFS-Git-New\\src\\ Code\\C#\\Services\\VCSvc\\VCSvc.sln"
+      "commandLineArgs": "internal . SolutionDependencyAnalyzerApp.sln"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+      
     }
   }
 }
